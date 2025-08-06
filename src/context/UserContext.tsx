@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { saveUserData, getUserData, removeStorageItem, STORAGE_KEYS } from '../utils/localStorage';
 
 export interface UserData {
   name: string;
@@ -27,19 +28,19 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const setUserData = (data: UserData) => {
     setUserDataState(data);
-    localStorage.setItem('civilink-user', JSON.stringify(data));
+    saveUserData(data);
   };
 
   const clearUserData = () => {
     setUserDataState(null);
-    localStorage.removeItem('civilink-user');
+    removeStorageItem(STORAGE_KEYS.USER_DATA);
   };
 
   // Load user data on mount
   React.useEffect(() => {
-    const stored = localStorage.getItem('civilink-user');
+    const stored = getUserData();
     if (stored) {
-      setUserDataState(JSON.parse(stored));
+      setUserDataState(stored);
     }
   }, []);
 

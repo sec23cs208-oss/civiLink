@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { BookOpen, AlertTriangle, Shield, Briefcase, GraduationCap, CheckCircle, XCircle, Info } from 'lucide-react';
+import { getEducationProgress, saveEducationProgress } from '../utils/localStorage';
 
 interface LegalGuide {
   id: string;
@@ -15,6 +16,20 @@ interface LegalGuide {
 const EducationPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'government' | 'it' | 'general'>('all');
   const [selectedGuide, setSelectedGuide] = useState<LegalGuide | null>(null);
+  const [completedGuides, setCompletedGuides] = useState<string[]>(
+    getEducationProgress().completedGuides || []
+  );
+
+  // Save progress whenever completed guides change
+  React.useEffect(() => {
+    saveEducationProgress({ completedGuides });
+  }, [completedGuides]);
+
+  const markGuideAsCompleted = (guideId: string) => {
+    if (!completedGuides.includes(guideId)) {
+      setCompletedGuides(prev => [...prev, guideId]);
+    }
+  };
 
   const legalGuides: LegalGuide[] = [
     {
