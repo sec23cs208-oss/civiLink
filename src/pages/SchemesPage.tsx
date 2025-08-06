@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import { Search, Filter, ExternalLink, CheckCircle, DollarSign, Calendar, Users } from 'lucide-react';
-import { getSchemeFavorites, saveSchemeFavorites } from '../utils/localStorage';
 
 interface Scheme {
   id: string;
@@ -24,20 +23,6 @@ const SchemesPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [eligibleSchemes, setEligibleSchemes] = useState<Scheme[]>([]);
   const [allSchemes, setAllSchemes] = useState<Scheme[]>([]);
-  const [favoriteSchemes, setFavoriteSchemes] = useState<string[]>(getSchemeFavorites());
-
-  // Save favorites to localStorage whenever they change
-  useEffect(() => {
-    saveSchemeFavorites(favoriteSchemes);
-  }, [favoriteSchemes]);
-
-  const toggleFavorite = (schemeId: string) => {
-    setFavoriteSchemes(prev => 
-      prev.includes(schemeId) 
-        ? prev.filter(id => id !== schemeId)
-        : [...prev, schemeId]
-    );
-  };
 
   useEffect(() => {
     if (!userData?.isRegistered) {

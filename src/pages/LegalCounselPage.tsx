@@ -1,11 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Send, Mic, MicOff, Volume2, Bot, User, Languages } from 'lucide-react';
-import { 
-  saveChatHistory, 
-  getChatHistory, 
-  saveLanguagePreference, 
-  getLanguagePreference 
-} from '../utils/localStorage';
 
 interface Message {
   id: string;
@@ -15,10 +9,17 @@ interface Message {
 }
 
 const LegalCounselPage = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'bot',
+      content: 'Hello! I\'m your AI Legal Counsel assistant. I can help you with legal guidance in Tamil, English, and other regional languages. You can type your questions or use voice input. How can I assist you today?',
+      timestamp: new Date()
+    }
+  ]);
   const [inputValue, setInputValue] = useState('');
   const [isListening, setIsListening] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState(getLanguagePreference());
+  const [selectedLanguage, setSelectedLanguage] = useState('en');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -30,35 +31,6 @@ const LegalCounselPage = () => {
     { code: 'kn', name: 'Kannada', flag: '🏴󠁩󠁮󠁫󠁡󠁿' },
     { code: 'ml', name: 'Malayalam', flag: '🏴󠁩󠁮󠁫󠁬󠁿' }
   ];
-
-  // Load chat history on mount
-  useEffect(() => {
-    const savedMessages = getChatHistory();
-    if (savedMessages.length > 0) {
-      setMessages(savedMessages);
-    } else {
-      // Set initial welcome message
-      const welcomeMessage: Message = {
-        id: '1',
-        type: 'bot',
-        content: 'Hello! I\'m your AI Legal Counsel assistant. I can help you with legal guidance in Tamil, English, and other regional languages. You can type your questions or use voice input. How can I assist you today?',
-        timestamp: new Date()
-      };
-      setMessages([welcomeMessage]);
-    }
-  }, []);
-
-  // Save messages to localStorage whenever messages change
-  useEffect(() => {
-    if (messages.length > 0) {
-      saveChatHistory(messages);
-    }
-  }, [messages]);
-
-  // Save language preference when changed
-  useEffect(() => {
-    saveLanguagePreference(selectedLanguage);
-  }, [selectedLanguage]);
 
   useEffect(() => {
     scrollToBottom();

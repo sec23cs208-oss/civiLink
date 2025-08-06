@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import SplashScreen from './components/SplashScreen';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import HomePage from './pages/HomePage';
@@ -9,27 +8,9 @@ import SchemesPage from './pages/SchemesPage';
 import LegalCounselPage from './pages/LegalCounselPage';
 import EducationPage from './pages/EducationPage';
 import { UserProvider } from './context/UserContext';
-import { isSplashShown, setSplashShown, updateLastVisit, migrateStorageData } from './utils/localStorage';
 import './index.css';
 
 function App() {
-  const [showSplash, setShowSplash] = useState(!isSplashShown());
-
-  React.useEffect(() => {
-    // Initialize storage migration and update last visit
-    migrateStorageData();
-    updateLastVisit();
-  }, []);
-
-  const handleSplashComplete = () => {
-    setSplashShown();
-    setShowSplash(false);
-  };
-
-  if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} />;
-  }
-
   return (
     <UserProvider>
       <Router>
